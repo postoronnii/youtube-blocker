@@ -1,9 +1,14 @@
-import { SELECTORS } from "../../shared/constants";
-import { applyOverlay, removeOverlay, hideElement, showElement } from "../ui/overlay";
+import { SELECTORS, BLOCKED_ATTR } from "../../shared/constants";
+import {
+  applyOverlay,
+  removeOverlay,
+  hideElement,
+  showElement,
+} from "../ui/overlay";
 
 export function filterShorts(shouldBlock: boolean): void {
   blurIndividualReels(shouldBlock);
-  blurShortsLinksInFeed(shouldBlock);
+  blurShortsLinksWithoutContainer(shouldBlock);
   toggleShortsNavigation(shouldBlock);
 
   if (shouldBlock && isOnShortsPage()) {
@@ -25,19 +30,28 @@ function blurIndividualReels(shouldBlock: boolean): void {
   }
 }
 
-function blurShortsLinksInFeed(shouldBlock: boolean): void {
+function blurShortsLinksWithoutContainer(shouldBlock: boolean): void {
   const shortsLinks = document.querySelectorAll<HTMLAnchorElement>(
     'a[href*="/shorts/"]'
   );
 
   for (const link of shortsLinks) {
-    const videoItem = link.closest<HTMLElement>(SELECTORS.videoRenderer);
-    if (!videoItem) continue;
+    if (link.closest(`[${BLOCKED_ATTR}]`)) continue;
+
+    const container = link.closest<HTMLElement>(
+      `${SELECTORS.shortsItem}, ${SELECTORS.videoRenderer}`
+    );
+    if (container) continue;
+
+    const target = link.closest<HTMLElement>(
+      "ytd-compact-video-renderer, yt-lockup-view-model, ytd-video-renderer"
+    ) ?? link.parentElement;
+    if (!target || target.hasAttribute(BLOCKED_ATTR)) continue;
 
     if (shouldBlock) {
-      applyOverlay(videoItem, "Shorts");
+      applyOverlay(target, "Shorts");
     } else {
-      removeOverlay(videoItem);
+      removeOverlay(target);
     }
   }
 }

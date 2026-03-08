@@ -40,7 +40,11 @@ export const SELECTORS = {
   shortsShelf: "ytd-reel-shelf-renderer, ytd-rich-shelf-renderer[is-shorts]",
   shortsEntry:
     'ytd-rich-section-renderer[is-shorts-grid], ytd-rich-section-renderer[is-shorts]',
-  shortsItem: "ytd-reel-item-renderer",
+  shortsItem: [
+    "ytd-reel-item-renderer",
+    "ytm-shorts-lockup-view-model-v2",
+    "ytm-shorts-lockup-view-model",
+  ].join(", "),
   shortsSidebar: 'ytd-guide-entry-renderer a[title="Shorts"]',
   shortsNavItem: "ytd-mini-guide-entry-renderer a[title='Shorts']",
   shortsPage: "ytd-shorts",
