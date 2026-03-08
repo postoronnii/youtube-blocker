@@ -1,0 +1,40 @@
+---
+description: TypeScript coding standards
+globs: "**/*.ts"
+alwaysApply: false
+---
+
+# TypeScript Standards
+
+## Strict Mode
+
+- Enable `strict: true` in tsconfig — no exceptions
+- No `any` types — use `unknown` and narrow with type guards
+- Prefer `interface` for object shapes, `type` for unions/intersections
+
+## Naming
+
+- `camelCase` for variables and functions
+- `PascalCase` for types, interfaces, and classes
+- `SCREAMING_SNAKE_CASE` for constants
+- Prefix boolean variables with `is`, `has`, `should`
+- Suffix event handler functions with `Handler` or use `on` prefix
+
+## Error Handling
+
+- Always handle promise rejections — no fire-and-forget
+- Use try/catch in async functions, log context with errors
+- Chrome API callbacks: check `chrome.runtime.lastError`
+
+## Exports
+
+- Prefer named exports over default exports
+- One module = one responsibility
+- Re-export from barrel `index.ts` files only at feature boundaries
+
+## Code Style
+
+- No classes unless genuinely needed (prefer functions + closures)
+- Prefer `const` assertions for literal objects used as config
+- Use early returns to reduce nesting
+- Destructure function parameters when there are 3+ properties

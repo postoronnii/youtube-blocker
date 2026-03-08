@@ -1,0 +1,48 @@
+---
+description: Chrome Extension Manifest V3 conventions
+globs: src/**/*.ts, src/manifest.json
+alwaysApply: false
+---
+
+# Chrome Extension Conventions
+
+## Manifest V3
+
+- Use `"manifest_version": 3` — V2 is deprecated
+- Service worker in `background.service_worker`, not `background.scripts`
+- Use `chrome.storage.sync` for user settings (syncs across devices)
+- Content scripts declared in manifest with appropriate `matches` patterns
+- Request minimal permissions: `storage`, `activeTab`, `tabs`
+
+## Content Scripts
+
+- YouTube is an SPA — never assume a full page load. Always use `MutationObserver`
+- Target `https://www.youtube.com/*` in manifest matches
+- Use `document_idle` for `run_at` unless early injection is needed
+- Clean up observers and listeners when the script is re-injected
+
+## Message Passing
+
+- Use `chrome.runtime.sendMessage` / `onMessage` for popup ↔ background
+- Use `chrome.tabs.sendMessage` for background → content script
+- Always type message payloads with discriminated unions:
+
+```typescript
+type Message =
+  | { type: "TOGGLE_EXTENSION"; enabled: boolean }
+  | { type: "UPDATE_FILTERS"; filters: FilterConfig }
+  | { type: "GET_STATUS" };
+```
+
+## Storage
+
+- Wrap `chrome.storage.sync` with typed async helpers
+- Always provide defaults via `chrome.storage.sync.get({ key: defaultValue })`
+- Listen to `chrome.storage.onChanged` to react to cross-tab changes
+
+## Performance
+
+- Minimize DOM queries — cache selectors where possible
+- Debounce MutationObserver callbacks
+- Avoid blocking the main thread — use `requestIdleCallback` for non-urgent work
+- Never use `document.querySelectorAll("*")` — always scope queries tightly

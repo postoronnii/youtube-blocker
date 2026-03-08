@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="popup.css" />
+  <title>YouTube Focus</title>
+</head>
+<body>
+  <div class="popup">
+    <header class="popup-header">
+      <h1 class="popup-title">YouTube Focus</h1>
+      <label class="toggle">
+        <input type="checkbox" id="toggle-enabled" />
+        <span class="toggle-slider"></span>
+      </label>
+    </header>
+
+    <section class="popup-section">
+      <label class="setting-row">
+        <input type="checkbox" id="toggle-shorts" />
+        <span>Block Shorts</span>
+      </label>
+      <label class="setting-row">
+        <input type="checkbox" id="toggle-clickbait" />
+        <span>Block Clickbait</span>
+      </label>
+    </section>
+
+    <section class="popup-section">
+      <h2 class="section-title">Block Mode</h2>
+      <div class="mode-toggle">
+        <button class="mode-btn" id="mode-thumbnail" data-mode="thumbnail">Thumbnail only</button>
+        <button class="mode-btn" id="mode-full" data-mode="full">Full card</button>
+      </div>
+    </section>
+
+    <section class="popup-section">
+      <h2 class="section-title">Blocked Keywords</h2>
+      <div class="tag-input-group">
+        <input type="text" id="keyword-input" placeholder="Add keyword..." />
+        <button id="add-keyword" class="btn-add">+</button>
+      </div>
+      <div id="keyword-tags" class="tag-list"></div>
+    </section>
+
+    <section class="popup-section">
+      <h2 class="section-title">Blocked Channels</h2>
+      <div class="tag-input-group">
+        <input type="text" id="channel-input" placeholder="Add channel..." />
+        <button id="add-channel" class="btn-add">+</button>
+      </div>
+      <div id="channel-tags" class="tag-list"></div>
+    </section>
+
+    <footer class="popup-footer">
+      <span class="footer-text">Stay focused.</span>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

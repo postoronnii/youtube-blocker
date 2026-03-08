@@ -1,0 +1,16 @@
+{
+  "name": "youtube-focus-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that blocks YouTube Shorts and entertainment content to help you focus on educational videos",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && node build.mjs",
+    "watch": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "esbuild": "^0.27.3",
+    "typescript": "^5.7.0"
+  }
+}

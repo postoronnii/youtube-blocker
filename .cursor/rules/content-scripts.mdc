@@ -1,0 +1,59 @@
+---
+description: Content script patterns for YouTube DOM manipulation
+globs: src/content/**/*.ts
+alwaysApply: false
+---
+
+# Content Script Patterns
+
+## YouTube Selectors
+
+YouTube changes their DOM frequently. Keep selectors in `src/shared/constants.ts` so they're easy to update.
+
+```typescript
+const SELECTORS = {
+  shortsShelf: "ytd-reel-shelf-renderer",
+  shortsEntry: "ytd-rich-section-renderer[is-shorts]",
+  shortsSidebar: 'a[href="/shorts"]',
+  videoRenderer: "ytd-video-renderer, ytd-rich-item-renderer",
+  videoTitle: "#video-title",
+  channelName: "#channel-name a, ytd-channel-name a",
+  navigationManager: "yt-navigate-finish",
+} as const;
+```
+
+## MutationObserver Strategy
+
+YouTube is an SPA — observe `document.body` (or `ytd-app`) for `childList` + `subtree` changes. Always debounce the callback:
+
+```typescript
+function createDebouncedObserver(
+  callback: () => void,
+  delay = 300
+): MutationObserver {
+  let timeout: ReturnType<typeof setTimeout>;
+  return new MutationObserver(() => {
+    clearTimeout(timeout);
+    timeout = setTimeout(callback, delay);
+  });
+}
+```
+
+Also listen for YouTube's custom `yt-navigate-finish` event for SPA route changes.
+
+## Filtering Approach
+
+1. Query new video elements in the observed subtree
+2. For each video element, extract title, channel, and category metadata
+3. Run through filter pipeline: shorts → category → keyword → channel
+4. Apply blur overlay or hide depending on filter match
+5. Mark processed elements with a `data-ytf-processed` attribute to avoid re-processing
+
+## Overlay Pattern
+
+When blurring content, inject an overlay `<div>` as a sibling/wrapper:
+
+- Use CSS `filter: blur(20px)` on the video thumbnail
+- Overlay with semi-transparent background + centered icon
+- Add `pointer-events: none` on blurred content to prevent accidental clicks
+- Store original state so the filter can be toggled on/off without page reload

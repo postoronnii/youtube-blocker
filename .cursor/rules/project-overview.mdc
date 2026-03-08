@@ -1,0 +1,60 @@
+---
+description: YouTube Focus Extension — project overview and architecture
+alwaysApply: true
+---
+
+# YouTube Focus Extension
+
+Chrome extension (Manifest V3) that blocks YouTube Shorts and entertainment content to help users stay focused on educational videos.
+
+## Tech Stack
+
+- **Manifest V3** — Chrome extension platform
+- **TypeScript** — all source code
+- **Vite** + **@crxjs/vite-plugin** — build tooling with HMR
+- **Vanilla TS + CSS** — no UI framework (popup and content scripts)
+- **Chrome Storage API (sync)** — persisted user settings
+
+## Core Features
+
+1. **Shorts blocking** — blur Shorts with overlay + icon, across all YouTube surfaces (homepage, sidebar, Shorts shelf, Shorts page)
+2. **Category filtering** — block videos by YouTube category (Gaming, Entertainment, etc. — NOT Music)
+3. **Keyword filtering** — user-defined blocklist matched against titles/descriptions
+4. **Channel filtering** — user-defined allow/block lists per channel
+5. **Simple popup** — on/off toggle + quick access to filter settings
+
+## Project Structure
+
+```
+src/
+  background/
+    service-worker.ts     # Background service worker
+  content/
+    index.ts              # Content script entry
+    observers.ts          # MutationObservers for SPA navigation
+    filters/
+      shorts.ts           # Shorts detection and blurring
+      categories.ts       # Category-based filtering
+      keywords.ts         # Keyword-based filtering
+      channels.ts         # Channel-based filtering
+    ui/
+      overlay.ts          # Blur overlay component
+      styles.css          # Injected styles
+  popup/
+    index.html
+    popup.ts
+    popup.css
+  shared/
+    types.ts              # Shared TypeScript types
+    storage.ts            # Chrome Storage wrapper
+    constants.ts          # Default blocked categories, selectors
+  manifest.json
+```
+
+## Architecture Notes
+
+- Content scripts use `MutationObserver` to handle YouTube's SPA navigation
+- Category detection parses `ytInitialData` / meta tags from the page (no API key required)
+- All filtering runs client-side in the content script
+- Background service worker handles storage events and cross-tab state
+- Scheduling support is planned for later (not MVP)
