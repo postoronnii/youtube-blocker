@@ -51,5 +51,11 @@ function extractChannel(video: HTMLElement): string {
     return channelEl.textContent.trim();
   }
 
+  const channelLinks = video.querySelectorAll<HTMLAnchorElement>('a[href^="/@"]');
+  for (const link of channelLinks) {
+    const text = link.textContent?.trim();
+    if (text && text.length > 0) return text;
+  }
+
   return "";
 }

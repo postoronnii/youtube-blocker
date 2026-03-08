@@ -63,10 +63,10 @@ export const SELECTORS = {
     "h3",
   ].join(", "),
   channelName: [
+    'a[href^="/@"]',
     "#channel-name a",
     "ytd-channel-name a",
     "ytd-channel-name yt-formatted-string",
-    ".ytd-channel-name a",
   ].join(", "),
   thumbnail: [
     "ytd-thumbnail",
